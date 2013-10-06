@@ -1,4 +1,4 @@
-another-zombie-game
+Another Zombie Game
 ===================
 
 Just another zombie game.
