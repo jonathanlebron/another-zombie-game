@@ -2,104 +2,37 @@
 
 /* General
 ================================================== */
-body, #content, blockquote p{ color: #FFF; }
-
 body{
 	background-color: #2D8CDD;
 	font-family:Helvetica, Arial; }
-
-#home{
-	margin: 250px auto;
-	text-align: center; }
-
-h1, h2{
-	font-family: 'Happy Monkey', cursive;
-	-moz-text-shadow: 0 0 7px rgba(256,256,256, 0.65);
-	-webkit-text-shadow: 0 0 7px rgba(256,256,256, 0.65);
-	text-shadow: 0px 0px 7px rgba(256,256,256, 0.65); }
-
-h1 { font-size: 86px; }
-h2 { font-size: 36px; }
+#world{
+    width: 800px;
+    height: 768px;
+}
 
 /* Navigation
 ================================================== */
-nav{
-	margin: 20px auto;
-    padding: 20px;
-    text-align: center; }
 
-nav a:first-child{
-	-webkit-border-top-left-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-bottomleft: 4px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-left:1px solid #caced9; }
-
-nav a:last-child{
-    -webkit-border-top-right-radius: 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
-    -moz-border-radius-bottomright: 4px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-right:1px solid #caced9; }
-
-nav a{
-	display:inline;
-	margin: -2px;
-    padding:12px 30px;
-    border:1px solid #caced9;
-    border-right: none;
-    border-top-color:#d9d9d9;
-    border-bottom-color:#cccccc;
-    box-shadow:0 1px 2px rgba(0,0,0,0.15);
-    background: #FFFFFF;
-    background: -moz-linear-gradient(top, #FFFFFF 0%, #e7e8ef 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(100%,#e7e8ef));
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#e7e8ef',GradientType=0 );
-    background: -o-linear-gradient(top, #FFFFFF 0%,#e7e8ef 100%);
-    text-decoration:none;
-    font-size: 13px;
-    font-weight:700;
-    text-shadow: 0 1px 1px white;
-    cursor:pointer; }
 
 /* Content
 ================================================== */
-.contentDiv, blockquote { margin-bottom: 120px;}
-.contentDiv:last-child { margin-bottom: 0;}
-.contentDiv p {
-	line-height: 28px;
-	margin: 0 25px}
+
 
 /* Misc
 ================================================== */
-#icons{ float: right; }
-#icons a{ text-decoration:none; }
-#icons a, blockquote cite,nav a, nav a:hover, nav a:active, nav a:visited, button{ color: #135E93; }
-nav a:hover { background: #FFF; }
 footer{ text-align: right; }
 
 /* Other Screen Sizes
 ================================================== */
 
 @media only screen and (min-width: 768px) and (max-width: 959px){
-	#content{ margin: 200px auto; }
-	h1{ font-size: 68px; }
+
 }
 
 @media only screen and (max-width: 767px){
-	#home{ margin: 150px auto; }
-	h1{ font-size: 34px; }
-	h2{ font-size: 22px;}
-	nav a { padding: 9px 10px;}
+
 }
 
 @media only screen and (min-width: 480px) and (max-width: 767px){
-	#home{ margin: 175px auto; }
-	h1{ font-size: 48px; }
-	h2{ font-size: 28px;}
-	nav a { padding: 10px 16px;}
+
 }
