@@ -24,34 +24,35 @@ var canvas,
 	cloudX = 0,
 	cloudY = 0,
 	cloud2X = 800,
-	cloud2Y = 0;
+	cloud2Y = 0,
+	playerX = 430,
+	playerY = 375;
 
 function setupAZG(){
-	// Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
-	canvas = document.getElementById("world");
+  // Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
+  canvas = document.getElementById("world");
 
-	context = canvas.getContext("2d"); // Grab the 2d canvas context
+  context = canvas.getContext("2d"); // Grab the 2d canvas context
 
-	loadImage("world"); //edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
-	loadImage("cloud");
-	loadImage("cloud2");
+  loadImage("world"); //edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
+  loadImage("cloud");
+  loadImage("cloud2");
+  loadImage("hero");
 }
 
 function loadImage(name) {
 
   images[name] = new Image();
-  images[name].onload = function() {
+  images[name].onload = function(){
 	  resourceLoaded();
-  }
+	}
   images[name].src = "images/" + name + ".png";
 }
 
 function resourceLoaded() {
-
   numResourcesLoaded += 1;
-  if(numResourcesLoaded === totalResources) {
+  if(numResourcesLoaded === totalResources)
 	setInterval(redraw, 1000 / fps);
-  }
 }
 
 function redraw() {
@@ -59,6 +60,7 @@ function redraw() {
 
   animateClouds();
   context.drawImage(images["world"], 0, 0);
+  context.drawImage(images["hero"], 131, 5, 26, 44, playerX, playerY, 26, 44);
   context.font = "42px serif";
   context.fillText("Score: ", 10, 32);
   context.drawImage(images["cloud"], cloudX, cloudY);
@@ -66,13 +68,12 @@ function redraw() {
 }
 
 function animateClouds(){
-	if (cloudX <= -canvasWidth){
-		cloudX = canvasWidth;
-	}
-	if (cloud2X <= -canvasWidth){
-		cloud2X = canvasWidth;
-	}
+  if (cloudX <= -canvasWidth)
+  	cloudX = canvasWidth;
 
-	cloudX -= .5;
-	cloud2X -= .5;
+  if (cloud2X <= -canvasWidth)
+  	cloud2X = canvasWidth;
+
+  cloudX -= .5;
+  cloud2X -= .5;
 }
