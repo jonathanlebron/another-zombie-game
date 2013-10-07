@@ -20,7 +20,9 @@ body{
 
 /* Misc
 ================================================== */
-footer{ text-align: right; }
+footer{
+	text-align: right;
+	margin-right: 10px; }
 
 /* Other Screen Sizes
 ================================================== */
