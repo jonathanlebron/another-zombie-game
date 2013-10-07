@@ -20,7 +20,11 @@ var canvas,
 	fps = 30,
 	curFPS = 0,
 	canvasWidth = 800,
-	canvasHeight = 768;
+	canvasHeight = 768,
+	cloudX = 0,
+	cloudY = 0,
+	cloud2X = 800,
+	cloud2Y = 0;
 
 function setupAZG(){
 	// Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
@@ -53,7 +57,22 @@ function resourceLoaded() {
 function redraw() {
   canvas.width = canvas.width; // clears the canvas
 
+  animateClouds();
   context.drawImage(images["world"], 0, 0);
-  context.drawImage(images["cloud"], 0, 0);
-  context.drawImage(images["cloud2"], canvasWidth, 0);
+  context.font = "42px serif";
+  context.fillText("Score: ", 10, 32);
+  context.drawImage(images["cloud"], cloudX, cloudY);
+  context.drawImage(images["cloud2"], cloud2X, cloud2Y);
+}
+
+function animateClouds(){
+	if (cloudX <= -canvasWidth){
+		cloudX = canvasWidth;
+	}
+	if (cloud2X <= -canvasWidth){
+		cloud2X = canvasWidth;
+	}
+
+	cloudX -= .5;
+	cloud2X -= .5;
 }
