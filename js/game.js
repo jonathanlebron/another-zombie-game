@@ -47,116 +47,115 @@ var spriteSheetData = {
 };
 
 function playAZG(){
-	stage = new createjs.Stage("world");
+    stage = new createjs.Stage("world");
 
-	// load resources
-	for (var i=0; i<resources.length; i++){
-		loadImage(resources[i]);
-	}
+    // load resources
+    for (var i=0; i<resources.length; i++){
+    	loadImage(resources[i]);
+    }
 
-	// world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
-	var background = new createjs.Bitmap(images["world"]);
-	background.x = 0;
-	background.y = 0;
-	stage.addChild(background);
+    // world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
+    var background = new createjs.Bitmap(images["world"]);
+    background.x = 0;
+    background.y = 0;
+    stage.addChild(background);
 
-	// add player
-	
+    // add player
 
+    // add clouds
+    cloud = new createjs.Bitmap(images["cloud"]);
+    cloud.x = 0;
+    cloud.y = 0;
+    cloud2 = new createjs.Bitmap(images["cloud2"]);
+    cloud2.x = -800;
+    cloud2.y = 0;
+    stage.addChild(cloud);
+    stage.addChild(cloud2);
 
-	// add clouds
-	cloud = new createjs.Bitmap(images["cloud"]);
-	cloud.x = 0;
-	cloud.y = 0;
-	cloud2 = new createjs.Bitmap(images["cloud2"]);
-	cloud2.x = -800;
-	cloud2.y = 0;
-	stage.addChild(cloud);
-	stage.addChild(cloud2);
-
-	// main game loop
-	createjs.Ticker.addEventListener("tick", loop);
-	createjs.Ticker.setFPS(fps);
+    // main game loop
+    createjs.Ticker.addEventListener("tick", loop);
+    createjs.Ticker.setFPS(fps);
 }
 
 /*
 var player = {
-	x: 430,
-	y: 375,
-	xSpeed: 2.5,
-	ySpeed: 2.5,
-	xVelocity: 0.0,
-	yVelocity: 0.0,
-	width: 26,
-	height: 44,
+    x: 430,
+    y: 375,
+    xSpeed: 2.5,
+    ySpeed: 2.5,
+    xVelocity: 0.0,
+    yVelocity: 0.0,
+    width: 26,
+    height: 44,
 };*/
 
 function loop(event){
-	redraw();
-	stage.update();
+    redraw();
+    stage.update();
 }
 
 function loadImage(name) {
-	images[name] = new Image();
-	images[name].src = "images/" + name + ".png";
+    images[name] = new Image();
+    images[name].src = "images/" + name + ".png";
 }
 
 function redraw() {
-	// animate clouds
-	if (cloud.x > stage.canvas.width)
-		cloud.x = -800;
+    // animate clouds
+    if (cloud.x > stage.canvas.width)
+    	cloud.x = -800;
 
-	if (cloud2.x > stage.canvas.width)
-		cloud2.x = -800;
+    if (cloud2.x > stage.canvas.width)
+    	cloud2.x = -800;
 
-	cloud.x += 0.5;
-	cloud2.x += 0.5;
-	/*
-	player.xVelocity = 0.0;
-	player.yVelocity = 0.0;
+    cloud.x += 0.5;
+    cloud2.x += 0.5;
 
-	if(keydown.left) {
-		player.xVelocity -= player.xSpeed;
-	}
-	if(keydown.right) {
-		player.xVelocity += player.xSpeed;
-	}
-	if(keydown.up) {
-		player.yVelocity -= player.ySpeed;
-	}
-	if(keydown.down) {
-		player.yVelocity += player.ySpeed;
-	}
+    /*
+    player.xVelocity = 0.0;
+    player.yVelocity = 0.0;
 
-	if (player.atWall()){
-		player.xVelocity = 0.0;
-		player.yVelocity = 0.0;
-	}
+    if(keydown.left) {
+        player.xVelocity -= player.xSpeed;
+    }
 
-	player.x += player.xVelocity;
-	player.y += player.yVelocity;
+    if(keydown.right) {
+        player.xVelocity += player.xSpeed;
+    }
+    if(keydown.up) {
+        player.yVelocity -= player.ySpeed;
+    }
+    if(keydown.down) {
+        player.yVelocity += player.ySpeed;
+    }
 
-	// animate clouds
-	if (cloud.x <= -canvasWidth)
-		cloud.x = canvasWidth;
+    if (player.atWall()){
+	    player.xVelocity = 0.0;
+	    player.yVelocity = 0.0;
+    }
 
-	if (cloud2.x <= -canvasWidth)
-		cloud2.x = canvasWidth;
+    player.x += player.xVelocity;
+    player.y += player.yVelocity;
 
-	cloud.x -= cloud.xVelocity;
-	cloud2.x -= cloud2.xVelocity;
-	
-	canvas.width = canvas.width; // clears the canvas
+    // animate clouds
+    if (cloud.x <= -canvasWidth)
+        cloud.x = canvasWidth;
 
-	context.drawImage(images["world"], 0, 0);
-	context.fillStyle = "#000";
+    if (cloud2.x <= -canvasWidth)
+        cloud2.x = canvasWidth;
+
+    cloud.x -= cloud.xVelocity;
+    cloud2.x -= cloud2.xVelocity;
+
+    canvas.width = canvas.width; // clears the canvas
+
+    context.drawImage(images["world"], 0, 0);
+    context.fillStyle = "#000";
     context.fillRect(player.x+5, player.y+5, player.width-10, player.height-10);
     player.draw();
-	context.drawImage(images["world2"], 0, 0);
-	context.font = "42px serif";
-	context.fillText("Score: ", 10, 32);
-	cloud.draw();
-	cloud2.draw();
-	*/
-
+    context.drawImage(images["world2"], 0, 0);
+    context.font = "42px serif";
+    context.fillText("Score: ", 10, 32);
+    cloud.draw();
+    cloud2.draw();
+    */
 }
