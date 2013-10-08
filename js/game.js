@@ -28,75 +28,91 @@ var canvas,
 	cloud2X = 800,
 	cloud2Y = 0,
 	cloudXSpeed = .5,
-	cloudYSpeed = 0,
-	playerX = 430,
-	playerY = 375,
-	playerXSpeed = 5,
-	playerYSpeed = 5,
-	playerXVel,
-	playerYVel;
+	cloudYSpeed = 0;
 
-function setupAZG(){
+var player = {
+	x: 430,
+	y: 375,
+	xSpeed: 5,
+	ySpeed: 5,
+	xVelocity: 0.0,
+	yVelocity: 0.0,
+	width: 26,
+	height: 44,
+	draw: function() {
+		context.drawImage(images["hero"], 131, 5, this.width, this.height, this.x, this.y, this.width, this.height);
+	}
+};
+
+function playAZG(){
 	// Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
 	canvas = document.getElementById("world");
 
 	context = canvas.getContext("2d"); // Grab the 2d canvas context
 
-	loadImage("world"); //edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
-	loadImage("cloud");
-	loadImage("cloud2");
-	loadImage("hero");
+	// world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
+	for (var i=0; i<resources.length; i++){
+		loadImage(resources[i]);
+	}
+
+	// main game loop
+	setInterval(function(){
+		update();
+		redraw();
+	}, 1000 / fps);
 }
 
 function loadImage(name) {
-
-  images[name] = new Image();
-  images[name].onload = function(){
-	  resourceLoaded();
-  }
-  images[name].src = "images/" + name + ".png";
-}
-
-function resourceLoaded() {
-  numResourcesLoaded += 1;
-  if(numResourcesLoaded === totalResources)
-	setInterval(redraw, 1000 / fps);
+	images[name] = new Image();
+	images[name].src = "images/" + name + ".png";
 }
 
 function redraw() {
-  canvas.width = canvas.width; // clears the canvas
+	canvas.width = canvas.width; // clears the canvas
 
-  animateClouds();
-  context.drawImage(images["world"], 0, 0);
-  context.drawImage(images["hero"], 131, 5, 26, 44, playerX, playerY, 26, 44);
-  context.font = "42px serif";
-  context.fillText("Score: ", 10, 32);
-  context.drawImage(images["cloud"], cloudX, cloudY);
-  context.drawImage(images["cloud2"], cloud2X, cloud2Y);
+	context.drawImage(images["world"], 0, 0);
+	player.draw();
+	context.font = "42px serif";
+	context.fillText("Score: ", 10, 32);
+	context.drawImage(images["cloud"], cloudX, cloudY);
+	context.drawImage(images["cloud2"], cloud2X, cloud2Y);
 }
 
-function animateClouds(){
-  if (cloudX <= -canvasWidth)
-  	cloudX = canvasWidth;
+function update(){
+	if(keydown.left) {
+		player.x -= 5;
+	}
+	if(keydown.right) {
+		player.x += 5;
+	}
+	if(keydown.up) {
+		player.y -= 5;
+	}
+	if(keydown.down) {
+		player.y += 5;
+	}
 
-  if (cloud2X <= -canvasWidth)
-  	cloud2X = canvasWidth;
+	// animate clouds
+	if (cloudX <= -canvasWidth)
+		cloudX = canvasWidth;
 
-  cloudX -= cloudXSpeed;
-  cloud2X -= cloudXSpeed;
+	if (cloud2X <= -canvasWidth)
+		cloud2X = canvasWidth;
+
+	cloudX -= cloudXSpeed;
+	cloud2X -= cloudXSpeed;
 }
 
-window.addEventListener('keydown', handleInput,false);
 function handleInput(e){
 	var key = e.keyCode;
-	playerXVel = 0.0;
-	playerYVel = 0.0;
+	player.xVelocity = 0.0;
+	player.yVelocity = 0.0;
 
 	switch (key) {
-        case 37: playerXVel -= playerXSpeed; break; //Left key
-        case 38: playerYVel -= playerYSpeed; break; //Up key
-        case 39: playerXVel += playerXSpeed; break; //Right key
-        case 40: playerYVel += playerYSpeed; break; //Down key
+        case 37: player.xVelocity -= player.xSpeed; break; //Left key
+        case 38: player.yVelocity -= player.ySpeed; break; //Up key
+        case 39: player.xVelocity += player.xSpeed; break; //Right key
+        case 40: player.yVelocity += player.ySpeed; break; //Down key
         default: break; //Everything else
     }
 
@@ -104,6 +120,6 @@ function handleInput(e){
 }
 
 function move(){
-	playerX += playerXVel;
-	playerY += playerYVel;
+	player.x += player.xVelocity;
+	player.y += player.yVelocity;
 }
