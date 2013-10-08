@@ -15,36 +15,19 @@
 var resources = ["world", "world2", "worldWalls","cloud", "cloud2", "hero"];
 
 var canvas,
-	stage,
-	context,
-	totalResources = resources.length,
-	numResourcesLoaded = 0,
-	images = {},
-	fps = 30,
-	curFPS = 0,
-	canvasWidth = 800,
-	canvasHeight = 768,
-	animationSpeed = 2,
-	hero,
-	cloud,
-	cloud2;
-
-var spriteSheetData = {
-	images: [images["hero.png"]],
-	frames: {width:28, height:42},
-	animations: {
-		downLeft:[0],
-		up:[1],
-		upLeft: [2],
-		left: [3],
-		down: [4],
-		runLeft: [5, 10, "left", animationSpeed],
-		runUpLeft: [11, 17, "upLeft", animationSpeed],
-		runUp: [18, 23, "up", animationSpeed],
-		runDownLeft: [24, 29, "downLeft", animationSpeed],
-		runDOwn: [30, 35, "down", animationSpeed]
-	}
-};
+    stage,
+    context,
+    totalResources = resources.length,
+    numResourcesLoaded = 0,
+    images = {},
+    fps = 30,
+    curFPS = 0,
+    canvasWidth = 800,
+    canvasHeight = 768,
+    animationSpeed = 2,
+    hero,
+    cloud,
+    cloud2;
 
 function playAZG(){
     stage = new createjs.Stage("world");
@@ -61,6 +44,24 @@ function playAZG(){
     stage.addChild(background);
 
     // add player
+    /*
+    var spriteSheetData = {
+        images: [images["hero.png"]],
+        frames: {width:28, height:42},
+        animations: {
+            downLeft:[0],
+            up:[1],
+            upLeft: [2],
+            left: [3],
+            down: [4],
+            runLeft: [5, 10, "left", animationSpeed],
+            runUpLeft: [11, 17, "upLeft", animationSpeed],
+            runUp: [18, 23, "up", animationSpeed],
+            runDownLeft: [24, 29, "downLeft", animationSpeed],
+            runDOwn: [30, 35, "down", animationSpeed]
+        }
+    };
+    */
 
     // add clouds
     cloud = new createjs.Bitmap(images["cloud"]);
