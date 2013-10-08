@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var resources = ["world", "cloud", "cloud2", "hero"];
+var resources = ["world", "world2", "worldWalls","cloud", "cloud2", "hero"];
 
 var canvas,
+	stage,
 	context,
 	totalResources = resources.length,
 	numResourcesLoaded = 0,
@@ -22,8 +23,63 @@ var canvas,
 	fps = 30,
 	curFPS = 0,
 	canvasWidth = 800,
-	canvasHeight = 768;
+	canvasHeight = 768,
+	animationSpeed = 2,
+	hero,
+	cloud,
+	cloud2;
 
+var spriteSheetData = {
+	images: [images["hero.png"]],
+	frames: {width:28, height:42},
+	animations: {
+		downLeft:[0],
+		up:[1],
+		upLeft: [2],
+		left: [3],
+		down: [4],
+		runLeft: [5, 10, "left", animationSpeed],
+		runUpLeft: [11, 17, "upLeft", animationSpeed],
+		runUp: [18, 23, "up", animationSpeed],
+		runDownLeft: [24, 29, "downLeft", animationSpeed],
+		runDOwn: [30, 35, "down", animationSpeed]
+	}
+};
+
+function playAZG(){
+	stage = new createjs.Stage("world");
+
+	// load resources
+	for (var i=0; i<resources.length; i++){
+		loadImage(resources[i]);
+	}
+
+	// world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
+	var background = new createjs.Bitmap(images["world"]);
+	background.x = 0;
+	background.y = 0;
+	stage.addChild(background);
+
+	// add player
+	
+
+
+	// add clouds
+	cloud = new createjs.Bitmap(images["cloud"]);
+	cloud.x = 0;
+	cloud.y = 0;
+	cloud2 = new createjs.Bitmap(images["cloud2"]);
+	cloud2.x = -800;
+	cloud2.y = 0;
+	stage.addChild(cloud);
+	stage.addChild(cloud2);
+
+	// main game loop
+	createjs.Ticker.addEventListener("tick", loop);
+	createjs.Ticker.setFPS(fps);
+}
+
+/*
 var player = {
 	x: 430,
 	y: 375,
@@ -33,52 +89,11 @@ var player = {
 	yVelocity: 0.0,
 	width: 26,
 	height: 44,
-	draw: function() {
-		context.drawImage(images["hero"], 131, 5, this.width, this.height, this.x, this.y, this.width, this.height);
-	}
-};
+};*/
 
-// should create a closure to create clouds, instead of repeating code. will get to this
-var cloud = {
-	x: 0,
-	y: 0,
-	xVelocity: 0.5,
-	width: canvasWidth,
-	height: canvasHeight,
-	draw: function() {
-		context.drawImage(images["cloud"], this.x, this.y);
-	}
-};
-
-var cloud2 = {
-	x: canvasWidth,
-	y: 0,
-	xVelocity: -0.5,
-	width: canvasWidth,
-	height: canvasHeight,
-	draw: function() {
-		context.drawImage(images["cloud2"], this.x, this.y);
-	}
-};
-
-function playAZG(){
-	// Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
-	canvas = document.getElementById("world");
-
-	context = canvas.getContext("2d"); // Grab the 2d canvas context
-
-	// world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
-	for (var i=0; i<resources.length; i++){
-		loadImage(resources[i]);
-	}
-
-
-
-	// main game loop
-	setInterval(function(){
-		update();
-		redraw();
-	}, 1000 / fps);
+function loop(event){
+	redraw();
+	stage.update();
 }
 
 function loadImage(name) {
@@ -87,17 +102,16 @@ function loadImage(name) {
 }
 
 function redraw() {
-	canvas.width = canvas.width; // clears the canvas
+	// animate clouds
+	if (cloud.x > stage.canvas.width)
+		cloud.x = -800;
 
-	context.drawImage(images["world"], 0, 0);
-	player.draw();
-	context.font = "42px serif";
-	context.fillText("Score: ", 10, 32);
-	cloud.draw();
-	cloud2.draw();
-}
+	if (cloud2.x > stage.canvas.width)
+		cloud2.x = -800;
 
-function update(){
+	cloud.x += 0.5;
+	cloud2.x += 0.5;
+	/*
 	player.xVelocity = 0.0;
 	player.yVelocity = 0.0;
 
@@ -114,6 +128,11 @@ function update(){
 		player.yVelocity += player.ySpeed;
 	}
 
+	if (player.atWall()){
+		player.xVelocity = 0.0;
+		player.yVelocity = 0.0;
+	}
+
 	player.x += player.xVelocity;
 	player.y += player.yVelocity;
 
@@ -126,4 +145,18 @@ function update(){
 
 	cloud.x -= cloud.xVelocity;
 	cloud2.x -= cloud2.xVelocity;
+	
+	canvas.width = canvas.width; // clears the canvas
+
+	context.drawImage(images["world"], 0, 0);
+	context.fillStyle = "#000";
+    context.fillRect(player.x+5, player.y+5, player.width-10, player.height-10);
+    player.draw();
+	context.drawImage(images["world2"], 0, 0);
+	context.font = "42px serif";
+	context.fillText("Score: ", 10, 32);
+	cloud.draw();
+	cloud2.draw();
+	*/
+
 }
