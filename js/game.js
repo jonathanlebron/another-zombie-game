@@ -22,25 +22,42 @@ var canvas,
 	fps = 30,
 	curFPS = 0,
 	canvasWidth = 800,
-	canvasHeight = 768,
-	cloudX = 0,
-	cloudY = 0,
-	cloud2X = 800,
-	cloud2Y = 0,
-	cloudXSpeed = .5,
-	cloudYSpeed = 0;
+	canvasHeight = 768;
 
 var player = {
 	x: 430,
 	y: 375,
-	xSpeed: 5,
-	ySpeed: 5,
+	xSpeed: 2.5,
+	ySpeed: 2.5,
 	xVelocity: 0.0,
 	yVelocity: 0.0,
 	width: 26,
 	height: 44,
 	draw: function() {
 		context.drawImage(images["hero"], 131, 5, this.width, this.height, this.x, this.y, this.width, this.height);
+	}
+};
+
+// should create a closure to create clouds, instead of repeating code. will get to this
+var cloud = {
+	x: 0,
+	y: 0,
+	xVelocity: 0.5,
+	width: canvasWidth,
+	height: canvasHeight,
+	draw: function() {
+		context.drawImage(images["cloud"], this.x, this.y);
+	}
+};
+
+var cloud2 = {
+	x: canvasWidth,
+	y: 0,
+	xVelocity: -0.5,
+	width: canvasWidth,
+	height: canvasHeight,
+	draw: function() {
+		context.drawImage(images["cloud2"], this.x, this.y);
 	}
 };
 
@@ -54,6 +71,8 @@ function playAZG(){
 	for (var i=0; i<resources.length; i++){
 		loadImage(resources[i]);
 	}
+
+
 
 	// main game loop
 	setInterval(function(){
@@ -74,52 +93,37 @@ function redraw() {
 	player.draw();
 	context.font = "42px serif";
 	context.fillText("Score: ", 10, 32);
-	context.drawImage(images["cloud"], cloudX, cloudY);
-	context.drawImage(images["cloud2"], cloud2X, cloud2Y);
+	cloud.draw();
+	cloud2.draw();
 }
 
 function update(){
-	if(keydown.left) {
-		player.x -= 5;
-	}
-	if(keydown.right) {
-		player.x += 5;
-	}
-	if(keydown.up) {
-		player.y -= 5;
-	}
-	if(keydown.down) {
-		player.y += 5;
-	}
-
-	// animate clouds
-	if (cloudX <= -canvasWidth)
-		cloudX = canvasWidth;
-
-	if (cloud2X <= -canvasWidth)
-		cloud2X = canvasWidth;
-
-	cloudX -= cloudXSpeed;
-	cloud2X -= cloudXSpeed;
-}
-
-function handleInput(e){
-	var key = e.keyCode;
 	player.xVelocity = 0.0;
 	player.yVelocity = 0.0;
 
-	switch (key) {
-        case 37: player.xVelocity -= player.xSpeed; break; //Left key
-        case 38: player.yVelocity -= player.ySpeed; break; //Up key
-        case 39: player.xVelocity += player.xSpeed; break; //Right key
-        case 40: player.yVelocity += player.ySpeed; break; //Down key
-        default: break; //Everything else
-    }
+	if(keydown.left) {
+		player.xVelocity -= player.xSpeed;
+	}
+	if(keydown.right) {
+		player.xVelocity += player.xSpeed;
+	}
+	if(keydown.up) {
+		player.yVelocity -= player.ySpeed;
+	}
+	if(keydown.down) {
+		player.yVelocity += player.ySpeed;
+	}
 
-    move();
-}
-
-function move(){
 	player.x += player.xVelocity;
 	player.y += player.yVelocity;
+
+	// animate clouds
+	if (cloud.x <= -canvasWidth)
+		cloud.x = canvasWidth;
+
+	if (cloud2.x <= -canvasWidth)
+		cloud2.x = canvasWidth;
+
+	cloud.x -= cloud.xVelocity;
+	cloud2.x -= cloud2.xVelocity;
 }
