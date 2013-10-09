@@ -52,22 +52,25 @@ function startGame(){
         frames: {width:28, height:42},
         animations: {
             downLeft:[0],
-            up:[1],
-            upLeft: [2],
-            left: [3],
-            down: [4],
-            runLeft: [5, 10, "runLeft", animationSpeed],
-            runRight: [11, 16, "runRight", animationSpeed],
-            runUpLeft: [17, 23, "runUpLeft", animationSpeed],
-            runUpRight: [24, 30, "runUpRight", animationSpeed],
-            runUp: [31, 36, "runUp", animationSpeed],
-            runDownLeft: [37, 42, "runDownLeft", animationSpeed],
-            runDownRight: [43, 48, "runDownRight", animationSpeed],
-            runDown: [49, 54, "runDown", animationSpeed]
+            downRight:[1],
+            up:[2],
+            upLeft: [3],
+            upRight: [4],
+            left: [5],
+            right: [6],
+            down: [7],
+            runLeft: [8, 13, "runLeft", animationSpeed],
+            runRight: [14, 19, "runRight", animationSpeed],
+            runUpLeft: [20, 26, "runUpLeft", animationSpeed],
+            runUpRight: [27, 33, "runUpRight", animationSpeed],
+            runUp: [34, 39, "runUp", animationSpeed],
+            runDownLeft: [40, 45, "runDownLeft", animationSpeed],
+            runDownRight: [46, 51, "runDownRight", animationSpeed],
+            runDown: [52, 57, "runDown", animationSpeed]
         }
     });
 
-    hero = new createjs.Sprite(spriteSheet, "runDown");
+    hero = new createjs.Sprite(spriteSheet, "down");
     hero.x = 430;
     hero.y = 375;
     hero.vX = 0;
@@ -111,7 +114,7 @@ function redraw(dt) {
 
     hero.xV = hero.yV = 0 //reset velocity
 
-    // handle key input
+    // handle keydown events
     if(keydown.up && keydown.left) {
     	hero.yV -= hero.speed;
         hero.xV -= hero.speed;
@@ -140,6 +143,24 @@ function redraw(dt) {
     } else if(keydown.down) {
         hero.yV += hero.speed;
         hero.currAnimation = "runDown";
+    }
+    // handle keyup events
+    else if(!keydown.up && hero.currAnimation == "runUpLeft") {
+    	hero.currAnimation = "upLeft";
+    } else if(!keydown.up && hero.currAnimation == "runUpRight") {
+        hero.currAnimation = "upRight";
+    } else if(!keydown.down && hero.currAnimation == "runDownLeft") {
+        hero.currAnimation = "downLeft";
+    } else if(!keydown.down && hero.currAnimation == "runDownRight") {
+        hero.currAnimation = "downRight";
+    } else if(!keydown.left && hero.currAnimation == "runLeft") {
+        hero.currAnimation = "left";
+    } else if(!keydown.right && hero.currAnimation == "runRight") {
+        hero.currAnimation = "right";
+    } else if(!keydown.up && hero.currAnimation == "runUp") {
+        hero.currAnimation = "up";
+    } else if(!keydown.down && hero.currAnimation == "runDown") {
+        hero.currAnimation = "down";
     }
 
     /*
