@@ -56,14 +56,18 @@ function startGame(){
             upLeft: [2],
             left: [3],
             down: [4],
-            runLeft: [5, 10, "left", animationSpeed],
-            runUpLeft: [11, 17, "upLeft", animationSpeed],
-            runUp: [18, 23, "up", animationSpeed],
-            runDownLeft: [24, 29, "downLeft", animationSpeed],
-            runDOwn: [30, 35, "down", animationSpeed]
+            runLeft: [5, 10, "runLeft", animationSpeed],
+            runRight: [11, 16, "runRight", animationSpeed],
+            runUpLeft: [17, 23, "runUpLeft", animationSpeed],
+            runUpRight: [24, 30, "runUpRight", animationSpeed],
+            runUp: [31, 36, "runUp", animationSpeed],
+            runDownLeft: [37, 42, "runDownLeft", animationSpeed],
+            runDownRight: [43, 48, "runDownRight", animationSpeed],
+            runDown: [49, 54, "runDown", animationSpeed]
         }
     });
-    hero = new createjs.Sprite(spriteSheet, "down");
+
+    hero = new createjs.Sprite(spriteSheet, "runDown");
     hero.x = 430;
     hero.y = 375;
     hero.vX = 0;
@@ -91,7 +95,7 @@ function startGame(){
 
 function loop(event){
     redraw(event.delta/1000);
-    stage.update();
+    stage.update(event);
 }
 
 function redraw(dt) {
@@ -106,19 +110,34 @@ function redraw(dt) {
     cloud2.x += dt*cloud2.speed;
 
     hero.xV = hero.yV = 0 //reset velocity
-    if(keydown.left) {
+
+    // handle key input
+    if(keydown.up && keydown.left) {
+    	hero.yV -= hero.speed;
+        hero.xV -= hero.speed;
+        hero.currAnimation = "runUpLeft";
+    } else if(keydown.up && keydown.right) {
+    	hero.yV -= hero.speed;
+        hero.xV += hero.speed;
+        hero.currAnimation = "runUpRight";
+    } else if(keydown.down && keydown.left) {
+    	hero.yV += hero.speed;
+        hero.xV -= hero.speed;
+        hero.currAnimation = "runDownLeft";
+    } else if(keydown.down && keydown.right) {
+    	hero.yV += hero.speed;
+        hero.xV += hero.speed;
+        hero.currAnimation = "runDownRight";
+    } else if(keydown.left) {
         hero.xV -= hero.speed;
         hero.currAnimation = "runLeft";
-    }
-    if(keydown.right) {
+    } else if(keydown.right) {
         hero.xV += hero.speed;
         hero.currAnimation = "runRight";
-    }
-    if(keydown.up) {
+    } else if(keydown.up) {
         hero.yV -= hero.speed;
         hero.currAnimation = "runUp";
-    }
-    if(keydown.down) {
+    } else if(keydown.down) {
         hero.yV += hero.speed;
         hero.currAnimation = "runDown";
     }
@@ -130,7 +149,7 @@ function redraw(dt) {
     }*/
 
     if (hero.prevAnimation != hero.currAnimation){
-    	hero.play(hero.currAnimation);
+    	hero.gotoAndPlay(hero.currAnimation);
     	hero.prevAnimation = hero.currAnimation;
     }
 
