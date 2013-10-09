@@ -12,19 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var resources = ["world", "world2", "worldWalls","cloud", "cloud2", "hero"];
-
-var canvas,
-    stage,
-    context,
+var stage,
+    resources = ["world", "world2", "worldWalls","cloud", "cloud2", "hero"],
+    resourcesLoaded = 0,
     totalResources = resources.length,
-    numResourcesLoaded = 0,
-    images = {},
+    loader,
     fps = 30,
-    curFPS = 0,
-    canvasWidth = 800,
-    canvasHeight = 768,
-    animationSpeed = 2,
+    animationSpeed = .2,
     hero,
     cloud,
     cloud2;
@@ -32,21 +26,29 @@ var canvas,
 function playAZG(){
     stage = new createjs.Stage("world");
 
-    // load resources
-    for (var i=0; i<resources.length; i++){
-    	loadImage(resources[i]);
+    manifest = [];
+
+    for (var i=0; i<totalResources; i++){
+    	var resource = resources[i];
+    	manifest.push({id: resource, src:"images/"+resource+".png"});
     }
 
+    // load resources
+    loader = new createjs.LoadQueue(false);
+    loader.addEventListener("complete", startGame); //start game on completion
+    loader.loadManifest(manifest);
+}
+
+function startGame(){
+	// create background
     // world.jpg edited from http://www.spriters-resource.com/game_boy_advance/narutorpg/sheet/14388/
-    var background = new createjs.Bitmap(images["world"]);
+    var background = new createjs.Bitmap(loader.getResult("world"));
     background.x = 0;
     background.y = 0;
-    stage.addChild(background);
 
-    // add player
-    /*
-    var spriteSheetData = {
-        images: [images["hero.png"]],
+    // create player from sprite sheet
+    var spriteSheet = new createjs.SpriteSheet({
+        images: [loader.getResult("hero")],
         frames: {width:28, height:42},
         animations: {
             downLeft:[0],
@@ -60,103 +62,78 @@ function playAZG(){
             runDownLeft: [24, 29, "downLeft", animationSpeed],
             runDOwn: [30, 35, "down", animationSpeed]
         }
-    };
-    */
+    });
+    hero = new createjs.Sprite(spriteSheet, "down");
+    hero.x = 430;
+    hero.y = 375;
+    hero.vX = 0;
+    hero.vY = 0;
+    hero.prevAnimation = "down";
+    hero.currAnimation = "down";
+    hero.speed = 75;
 
-    // add clouds
-    cloud = new createjs.Bitmap(images["cloud"]);
+    // create clouds
+    cloud = new createjs.Bitmap(loader.getResult("cloud"));
     cloud.x = 0;
     cloud.y = 0;
-    cloud2 = new createjs.Bitmap(images["cloud2"]);
-    cloud2.x = -800;
+    cloud2 = new createjs.Bitmap(loader.getResult("cloud2"));
+    cloud2.x = -stage.canvas.width;
     cloud2.y = 0;
-    stage.addChild(cloud);
-    stage.addChild(cloud2);
+    cloud.speed = cloud2.speed = 25
 
-    // main game loop
+    // add everything to the stage
+    stage.addChild(background, hero, cloud, cloud2);
+
+    // start main game loop
     createjs.Ticker.addEventListener("tick", loop);
     createjs.Ticker.setFPS(fps);
 }
 
-/*
-var player = {
-    x: 430,
-    y: 375,
-    xSpeed: 2.5,
-    ySpeed: 2.5,
-    xVelocity: 0.0,
-    yVelocity: 0.0,
-    width: 26,
-    height: 44,
-};*/
-
 function loop(event){
-    redraw();
+    redraw(event.delta/1000);
     stage.update();
 }
 
-function loadImage(name) {
-    images[name] = new Image();
-    images[name].src = "images/" + name + ".png";
-}
-
-function redraw() {
+function redraw(dt) {
     // animate clouds
     if (cloud.x > stage.canvas.width)
-    	cloud.x = -800;
+    	cloud.x = -stage.canvas.width;
 
     if (cloud2.x > stage.canvas.width)
-    	cloud2.x = -800;
+    	cloud2.x = -stage.canvas.width;
 
-    cloud.x += 0.5;
-    cloud2.x += 0.5;
+    cloud.x += dt*cloud.speed;
+    cloud2.x += dt*cloud2.speed;
 
-    /*
-    player.xVelocity = 0.0;
-    player.yVelocity = 0.0;
-
+    hero.xV = hero.yV = 0 //reset velocity
     if(keydown.left) {
-        player.xVelocity -= player.xSpeed;
+        hero.xV -= hero.speed;
+        hero.currAnimation = "runLeft";
     }
-
     if(keydown.right) {
-        player.xVelocity += player.xSpeed;
+        hero.xV += hero.speed;
+        hero.currAnimation = "runRight";
     }
     if(keydown.up) {
-        player.yVelocity -= player.ySpeed;
+        hero.yV -= hero.speed;
+        hero.currAnimation = "runUp";
     }
     if(keydown.down) {
-        player.yVelocity += player.ySpeed;
+        hero.yV += hero.speed;
+        hero.currAnimation = "runDown";
     }
 
-    if (player.atWall()){
-	    player.xVelocity = 0.0;
-	    player.yVelocity = 0.0;
+    /*
+    if (hero.atWall()){
+	    hero.xVelocity = 0.0;
+	    hero.yVelocity = 0.0;
+    }*/
+
+    if (hero.prevAnimation != hero.currAnimation){
+    	hero.play(hero.currAnimation);
+    	hero.prevAnimation = hero.currAnimation;
     }
 
-    player.x += player.xVelocity;
-    player.y += player.yVelocity;
-
-    // animate clouds
-    if (cloud.x <= -canvasWidth)
-        cloud.x = canvasWidth;
-
-    if (cloud2.x <= -canvasWidth)
-        cloud2.x = canvasWidth;
-
-    cloud.x -= cloud.xVelocity;
-    cloud2.x -= cloud2.xVelocity;
-
-    canvas.width = canvas.width; // clears the canvas
-
-    context.drawImage(images["world"], 0, 0);
-    context.fillStyle = "#000";
-    context.fillRect(player.x+5, player.y+5, player.width-10, player.height-10);
-    player.draw();
-    context.drawImage(images["world2"], 0, 0);
-    context.font = "42px serif";
-    context.fillText("Score: ", 10, 32);
-    cloud.draw();
-    cloud2.draw();
-    */
+    hero.x += hero.xV * dt;
+    hero.y += hero.yV * dt;
 }
